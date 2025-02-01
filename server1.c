@@ -46,4 +46,29 @@ int main() {
     server_addr.sin_family = AF_INET;  // Use IPv4
     server_addr.sin_addr.s_addr = INADDR_ANY;  // Accept connections from any available network interface
     server_addr.sin_port = htons(PORT);  // Convert port number to network byte order
+    if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    std::cerr << "Binding failed.\n";
+    return -1;
+}
+if (listen(server_fd, MAX_CLIENTS) < 0) {
+    std::cerr << "Listening failed.\n";
+    return -1;
+}
+std::cout << "Server is waiting for connections on port " << PORT << "...\n";
+for (int i = 0; i < MAX_CLIENTS; i++) {
+    client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_len);
+    if (client_fd < 0) {
+        std::cerr << "Accepting connection failed.\n";
+        return -1;
+    }
+
+    std::cout << "Client connected.\n";
+    pthread_create(&threads[i], NULL, handleClient, (void*)&client_fd);
+}
+for (int i = 0; i < MAX_CLIENTS; i++) {
+    pthread_join(threads[i], NULL);
+}
+close(server_fd);
+return 0;
+
 
