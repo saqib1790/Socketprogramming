@@ -1,3 +1,8 @@
+
+
+
+// Code for Server Architecture
+
 #include <iostream>       // For input/output operations (std::cout, std::cin)
 #include <cstring>        // For memory functions like memset()
 #include <sys/socket.h>   // For socket programming functions (socket(), bind(), listen(), accept())
@@ -70,5 +75,3 @@ for (int i = 0; i < MAX_CLIENTS; i++) {
 }
 close(server_fd);
 return 0;
-
-
